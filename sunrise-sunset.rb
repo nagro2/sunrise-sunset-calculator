@@ -166,7 +166,7 @@ def sunrisesunset(riseorset, month, day, year, latitude, longitude)
 
             #10. convert ut value to local time zone of latitude/longitude
 
-            localOffset = -4 #NY is normally 5 hrs behind ut, but with DST it is currently 4 hours (as of 9/21/15)
+            localOffset = -4 #NY is normally 5 hrs behind ut, but with DST it is currently 4 hours (as of 9/28/12)
 
             localT = ut + localOffset
 
@@ -180,6 +180,7 @@ def sunrisesunset(riseorset, month, day, year, latitude, longitude)
             end
 
 
+	#print localT, "\n"
             if riseorset == "rise" 
                 risehour = localT.to_int
                 riseminute = (localT - risehour) * 60
@@ -205,9 +206,16 @@ def sunrisesunset(riseorset, month, day, year, latitude, longitude)
             end
 end
 
-print "\nSunrise-Sunset demo:\n"
-ri = sunrisesunset("rise", 9, 21, 2015, 40.93, -73.03)
-se = sunrisesunset("set", 9, 21, 2015, 40.93, -73.03)
-print "for Sept 21, 2015, Sunrise ", ri[0],":", ri[1].round,", Sunset ", se[0],":", se[1].round,"\n\n"
 
+time = Time.new
+
+lat = 40.93 # 40.93 = NY, 0 = equator, 60 is highest latitude where the algorithm works well
+lon = -73.03 # -73.03 = NY
+
+ri = sunrisesunset("rise", time.month, time.day, time.year, lat, lon)
+se = sunrisesunset("set", time.month, time.day, time.year, lat, lon)
+if se[0] > 12
+	se[0] -= 12
+end
+print "For ", time.month, "/",time.day, "/", time.year, " Sunrise ", ri[0],":", ri[1].round,", Sunset ", se[0],":", se[1].round,"\n"
 
