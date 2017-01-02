@@ -230,13 +230,13 @@ class SunRiseSunSet
   end
 
   def output_rise
-    printf("For #{@date} Start #{@zenith} sunrise %2.0f:%02.0f\n",
+    printf("For #{@date} #{@zenith} sunrise %2.0f:%02.0f\n",
            local_t_out[0], local_t_out[1].round)
   end
 
   def output_set
     local_t_out[0] -= 12 if local_t_out[0] > 12
-    printf("For #{@date} End #{@zenith} sunset %2.0f:%02.0f\n",
+    printf("For #{@date} #{@zenith} sunset %2.0f:%02.0f\n",
            local_t_out[0], local_t_out[1].round)
   end
 
