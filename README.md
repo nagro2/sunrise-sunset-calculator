@@ -1,3 +1,12 @@
-# sunrise-sunset-calculator
+# sunrise-sunset-class.rb
 
-Ruby script to calculate Sunrise and Sunset times. Original Sunrise-Sunset algorithm was published by the United States Naval Observatory. 
+## Output
+
+    For 1/2/2017 official sunrise  8:08
+    For 1/2/2017 official sunset 16:05
+    For 1/2/2017 civil sunrise  7:28
+    For 1/2/2017 civil sunset 16:45
+    For 1/2/2017 nautical sunrise  6:45
+    For 1/2/2017 nautical sunset 17:28
+    For 1/2/2017 astronomical sunrise  6:04
+    For 1/2/2017 astronomical sunset 18:08
