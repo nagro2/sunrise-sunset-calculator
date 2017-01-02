@@ -16,13 +16,16 @@ require 'date'
 #	Washington, DC 20392
 
 # Inputs:
-#	day, month, year:      date of sunrise/sunset
-#	latitude, longitude:   location for sunrise/sunset
-#	zenith:                Sun's zenith for sunrise/sunset
-#	  offical      = 90 degrees 50'
-#	  civil        = 96 degrees
-#	  nautical     = 102 degrees
-#	  astronomical = 108 degrees
+#	       time:        date of sunrise/sunset is calculated
+#	       latitude:    location for sunrise/sunset
+#        longitude:   location for sunrise/sunset
+#	       zenith:      Sun's zenith for sunrise/sunset
+#	              offical      = 90 degrees 50'
+#	              civil        = 96 degrees
+#	              nautical     = 102 degrees
+#	              astronomical = 108 degrees
+#        local_offset: local zone time difference
+#        riseorset:    select which function rise or set
 #
 # NOTE: longitude is positive for East and negative for West
 #   NOTE: the algorithm assumes the use of a calculator with the
@@ -34,23 +37,31 @@ require 'date'
 #   answer with a degree input for l.
 class SunRiseSunSet
   include Math
-  attr_accessor :riseorset, :time, :latitude, :longitude, :local_offset
-  def initialize(riseorset, time, latitude, longitude, local_offset)
-    @riseorset = riseorset
+  attr_accessor :time, :latitude, :longitude, :zenith, :riseorset, :local_offset
+  def initialize(time, latitude, longitude, zenith, riseorset, local_offset)
     @time = time
     @lat = latitude
     @lon = longitude
+    @zenith = zenith
+    @riseorset = riseorset
     @loffset = local_offset
   end
 
-  def zenith
-    # for official sunrise / sunset per table below
-    #	zenith: Sun's zenith for sunrise/sunset
-    #	  offical      = 90 degrees 50'
-    #	  civil        = 96 degrees
-    #	  nautical     = 102 degrees
-    #	  astronomical = 108 degrees
-    (90.0 + (50.0 / 60.0)) * PI / 180
+
+
+  def cos_zenith
+    case @zenith
+    when 'official'
+      cos((90.0 + (50.0 / 60.0)) * PI / 180)
+    when 'civil'
+      cos(96 * PI / 180)
+    when 'nautical'
+      cos(102 * PI / 180)
+    when 'astronomical'
+      cos(108 * PI / 180)
+    else
+      exit
+    end
   end
 
   # 1. first calculate the day of the year
@@ -134,7 +145,7 @@ class SunRiseSunSet
   # 7a. calculate the Sun's local hour angle
   def cos_h
     lat = (PI / 180) * @lat
-    (cos(zenith) - (sin_dec * sin(lat))) /
+    (cos_zenith - (sin_dec * sin(lat))) /
       (cos_dec * cos(lat))
   end
 
@@ -221,16 +232,16 @@ class SunRiseSunSet
   end
 
   def output_rise
-    printf("Sunrise %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+    printf("For #{@date} Start #{@zenith} sunrise %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
   end
 
   def output_set
     local_t_out[0] -= 12 if local_t_out[0] > 12
-    printf("Sunset %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+    printf("For #{@date} End #{@zenith} sunset %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
   end
 
   def output
-    print "For #{@time.month}/#{@time.day}/#{@time.year} \n"
+    @date = "#{@time.month}/#{@time.day}/#{@time.year}"
     if @riseorset == 'rise'
       output_rise
     elsif @riseorset == 'set'
@@ -245,5 +256,11 @@ lat = 51.4770228
 lon = -0.0001147
 zone = 0
 
-@ri = SunRiseSunSet.new('rise', @time, lat, lon, zone).output
-@se = SunRiseSunSet.new('set', @time, lat, lon, zone).output
+SunRiseSunSet.new(@time, lat, lon, 'official', 'rise', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'official', 'set', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'civil', 'rise', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'civil', 'set', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'nautical', 'rise', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'nautical', 'set', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'astronomical', 'rise', zone).output
+SunRiseSunSet.new(@time, lat, lon, 'astronomical', 'set', zone).output
