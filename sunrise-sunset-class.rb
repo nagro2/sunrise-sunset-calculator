@@ -16,16 +16,16 @@ require 'date'
 #	Washington, DC 20392
 
 # Inputs:
-#time:         date of sunrise/sunset is calculated
-#latitude:     location for sunrise/sunset
-#longitude:    location for sunrise/sunset
-#zenith:       Sun's zenith for sunrise/sunset
+# time:         date of sunrise/sunset is calculated
+# latitude:     location for sunrise/sunset
+# longitude:    location for sunrise/sunset
+# zenith:       Sun's zenith for sunrise/sunset
 #	             offical      = 90 degrees 50'
 #	             civil        = 96 degrees
 #	             nautical     = 102 degrees
 #	             astronomical = 108 degrees
-#local_offset: local zone time difference
-#riseorset:    select which function rise or set
+# local_offset: local zone time difference
+# riseorset:    select which function rise or set
 #
 # NOTE: longitude is positive for East and negative for West
 #   NOTE: the algorithm assumes the use of a calculator with the
