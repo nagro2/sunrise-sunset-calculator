@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env ruby
 require 'date'
 # Sunrise Sunset calculator by Nick Agro
 # adapted from the algorithm below
@@ -44,12 +44,13 @@ class SunRiseSunSet
   end
 
   def zenith
-    90.0 + (50.0 / 60.0) # for official sunrise / sunset per table below
+    # for official sunrise / sunset per table below
     #	zenith: Sun's zenith for sunrise/sunset
     #	  offical      = 90 degrees 50'
     #	  civil        = 96 degrees
     #	  nautical     = 102 degrees
     #	  astronomical = 108 degrees
+    (90.0 + (50.0 / 60.0)) * PI / 180
   end
 
   # 1. first calculate the day of the year
@@ -79,10 +80,14 @@ class SunRiseSunSet
     357.5291 + (0.9856 * d)
   end
 
+  def ta
+    ma + (1.916 * sin((PI / 180) * ma)) +
+      (0.02 * sin((PI / 180) * 2 * ma))
+  end
+
   # 4. calculate the Sun's true longitude
   def tl
-    l = ma + (1.916 * sin((PI / 180) * ma)) +
-        (0.02 * sin((PI / 180) * 2 * ma)) + 282.634 # this might be
+    l = ta + 282.634 # this might be
     # argument of perihelion.
     # But that changes like anything else. Probably should be factored out
     # because the Earth is not that inclined to the Sun in its orbit
@@ -93,34 +98,33 @@ class SunRiseSunSet
     elsif l < 0
       l += 360
     end
-    l
+    l * PI / 180
   end
 
   # 5a. calculate the Sun's right ascension
   def ra
-    r = (180 / PI) * atan(0.91764 * tan((PI / 180) * tl))
+    r = atan(0.91764 * tan(tl))
     # NOTE: ra potentially needs to be adjusted into the
     # range [0,360) by adding/subtracting 360
-    if r >= 360
-      r -= 360
+    if r >= (2 * PI)
+      r -= (2 * PI)
     elsif r < 0
-      r += 360
+      r += (2 * PI)
     end
     r
   end
 
-  # 5b. right ascension value needs to be in the same quadrant as l
+  # 5b. right ascension value needs to be in the same quadrant as tl
   # 5c. right ascension value needs to be converted into hours
-  def eot
-    lquadrant = (tl / 90).floor * 90
-    raquadrant = (ra / 90).floor * 90
-    r = ra + (lquadrant - raquadrant)
-    r / 15.0
+  def ra_hours
+    lquadrant = (tl / 1.5708).floor * 1.5708
+    raquadrant = (ra / 1.5708).floor * 1.5708
+    (ra + lquadrant - raquadrant) / 0.2618
   end
 
   # 6. calculate the Sun's declination
   def sin_dec
-    0.39782 * sin((PI / 180) * tl)
+    0.39782 * sin(tl)
   end
 
   def cos_dec
@@ -129,39 +133,40 @@ class SunRiseSunSet
 
   # 7a. calculate the Sun's local hour angle
   def cos_h
-    (cos((PI / 180) * zenith) - (sin_dec * sin((PI / 180) * @lat))) /
-      (cos_dec * cos((PI / 180) * @lat))
+    lat = (PI / 180) * @lat
+    (cos(zenith) - (sin_dec * sin(lat))) /
+      (cos_dec * cos(lat))
   end
 
   def lat_h
-    if cos_h > 1
+    if @riseorset == 'rise' && (cos_h > 1 || cos_h < -1)
       # the sun never rises on this location (on the specified date)
-      print 'cos_h = ', cos_h
-      return [0, 0] if @riseorset == 'rise' &&
-                       cos_h > 1 ||
-                       @riseorset == 'rise' &&
-                       cos_h < -1
-    else # the sun never sets on this location (on the specified date)
-      return [23, 59] if cos_h > 1 || cos_h < -1
+      print 'sun never rises on this location'
+      [0, 0]
+    elsif cos_h > 1 || cos_h < -1
+      # the sun never sets on this location (on the specified date)
+      print 'sun never sets on this location'
+      [23, 59]
     end
   end
 
   # 7b. finish calculating h and convert into hours
   def ha
-    h = (180 / PI) * acos(cos_h)
-    h = 360 - (180 / PI) * acos(cos_h) if @riseorset == 'rise'
-    h / 15.0
+    h = acos(cos_h)
+    h = (2 * PI) - acos(cos_h) if @riseorset == 'rise'
+    h / 0.2618
   end
 
-  # 8. calculate local mean time of rising/setting
+  # 8. calculate local time of rising/setting
   def mt
-    ha + eot - (0.06571 * t) - 6.622
+    ha + ra_hours - (0.06571 * d) - 6.622
   end
 
   # 9. adjust back to UTC
   def utc
     ut = mt - lng_hour
-    # NOTE: ut potentially needs to be adjusted into the range [0,24) by adding/subtracting 24
+    # NOTE: ut potentially needs to be adjusted into the range [0,24)
+    #       by adding/subtracting 24
     if ut >= 24
       ut -= 24
     elsif ut < 0
@@ -173,7 +178,8 @@ class SunRiseSunSet
   # 10. convert ut value to local time zone of latitude/longitude
   def local_t
     local = utc + @loffset
-    # Nick note local_t may need to be adjusted into the range 0,24 by adding/subtracting 24
+    # Nick note: local_t may need to be adjusted into the range 0,24
+    #           by adding/subtracting 24
     if local >= 24
       local -= 24
     elsif local < 0
@@ -182,37 +188,53 @@ class SunRiseSunSet
     local
   end
 
+  def rise_t
+    risehour = local_t.to_int
+    riseminute = (local_t - risehour) * 60
+    if riseminute >= 60
+      riseminute -= 60
+      risehour += 1
+    end
+    risehour += 24 if risehour < 0
+    [risehour, riseminute]
+  end
+
+  def set_t
+    sethour = local_t.to_int
+    setminute = (local_t - sethour) * 60
+    if setminute >= 60
+      setminute -= 60
+      sethour += 1
+    end
+    sethour += 24 if sethour < 0
+    [sethour, setminute]
+  end
+
   # print local_t, "\n"
   def local_t_out
     lat_h
     if @riseorset == 'rise'
-      risehour = local_t.to_int
-      riseminute = (local_t - risehour) * 60
-      if riseminute >= 60
-        riseminute -= 60
-        risehour += 1
-      end
-      risehour += 24 if risehour < 0
-      [risehour, riseminute]
+      rise_t
     else
-      sethour = local_t.to_int
-      setminute = (local_t - sethour) * 60
-      if setminute >= 60
-        setminute -= 60
-        sethour += 1
-      end
-      sethour += 24 if sethour < 0
-      [sethour, setminute]
+      set_t
     end
+  end
+
+  def output_rise
+    printf("Sunrise %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+  end
+
+  def output_set
+    local_t_out[0] -= 12 if local_t_out[0] > 12
+    printf("Sunset %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
   end
 
   def output
     print "For #{@time.month}/#{@time.day}/#{@time.year} \n"
     if @riseorset == 'rise'
-      printf("Sunrise %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+      output_rise
     elsif @riseorset == 'set'
-      local_t_out[0] -= 12 if local_t_out[0] > 12
-      printf("Sunset %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+      output_set
     end
   end
 end
