@@ -34,11 +34,10 @@ require 'date'
 #   answer with a degree input for l.
 class SunRiseSunSet
   include Math
-  attr_accessor :riseorset, :time, :yday, :latitude, :longitude, :local_offset
+  attr_accessor :riseorset, :time, :latitude, :longitude, :local_offset
   def initialize(riseorset, time, latitude, longitude, local_offset)
     @riseorset = riseorset
     @time = time
-    @yday = time.yday
     @lat = latitude
     @lon = longitude
     @loffset = local_offset
@@ -66,7 +65,7 @@ class SunRiseSunSet
   end
 
   # if rising time is desired:
-  def t
+  def d
     if @riseorset == 'rise'
       n + ((6 - lng_hour) / 24.0)
     else
@@ -77,13 +76,16 @@ class SunRiseSunSet
 
   # 3. calculate the Sun's mean anomaly
   def ma
-    357.5291 + (0.9856 * t)
+    357.5291 + (0.9856 * d)
   end
 
   # 4. calculate the Sun's true longitude
   def tl
     l = ma + (1.916 * sin((PI / 180) * ma)) +
-        (0.02 * sin((PI / 180) * 2 * ma)) + 282.634
+        (0.02 * sin((PI / 180) * 2 * ma)) + 282.634 # this might be
+    # argument of perihelion.
+    # But that changes like anything else. Probably should be factored out
+    # because the Earth is not that inclined to the Sun in its orbit
     # NOTE: l potentially needs to be adjusted into the
     # range [0,360) by adding/subtracting 360
     if l >= 360
