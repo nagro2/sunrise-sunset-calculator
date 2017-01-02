@@ -1,4 +1,5 @@
 #
+require 'date'
 # Sunrise Sunset calculator by Nick Agro
 # adapted from the algorithm below
 # Note that accuracy of the algorithm degrades for north of 60 degrees north
@@ -53,8 +54,10 @@ class SunRiseSunSet
   end
 
   # 1. first calculate the day of the year
+  # should have the right julian day added.
   def n
-    @yday # should have the right julian day added. WIP
+    jd = Date.parse("#{@time.year}-#{@time.month}-#{@time.day}").jd
+    @yday = jd - 2_451_545.0
   end
 
   # 2. convert the longitude to hour value and calculate an approximate time
