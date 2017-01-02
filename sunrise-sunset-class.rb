@@ -16,16 +16,16 @@ require 'date'
 #	Washington, DC 20392
 
 # Inputs:
-#	       time:        date of sunrise/sunset is calculated
-#	       latitude:    location for sunrise/sunset
-#        longitude:   location for sunrise/sunset
-#	       zenith:      Sun's zenith for sunrise/sunset
-#	              offical      = 90 degrees 50'
-#	              civil        = 96 degrees
-#	              nautical     = 102 degrees
-#	              astronomical = 108 degrees
-#        local_offset: local zone time difference
-#        riseorset:    select which function rise or set
+#time:         date of sunrise/sunset is calculated
+#latitude:     location for sunrise/sunset
+#longitude:    location for sunrise/sunset
+#zenith:       Sun's zenith for sunrise/sunset
+#	             offical      = 90 degrees 50'
+#	             civil        = 96 degrees
+#	             nautical     = 102 degrees
+#	             astronomical = 108 degrees
+#local_offset: local zone time difference
+#riseorset:    select which function rise or set
 #
 # NOTE: longitude is positive for East and negative for West
 #   NOTE: the algorithm assumes the use of a calculator with the
@@ -46,8 +46,6 @@ class SunRiseSunSet
     @riseorset = riseorset
     @loffset = local_offset
   end
-
-
 
   def cos_zenith
     case @zenith
@@ -232,12 +230,14 @@ class SunRiseSunSet
   end
 
   def output_rise
-    printf("For #{@date} Start #{@zenith} sunrise %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+    printf("For #{@date} Start #{@zenith} sunrise %2.0f:%02.0f\n",
+           local_t_out[0], local_t_out[1].round)
   end
 
   def output_set
     local_t_out[0] -= 12 if local_t_out[0] > 12
-    printf("For #{@date} End #{@zenith} sunset %2.0f:%02.0f\n", local_t_out[0], local_t_out[1].round)
+    printf("For #{@date} End #{@zenith} sunset %2.0f:%02.0f\n",
+           local_t_out[0], local_t_out[1].round)
   end
 
   def output
