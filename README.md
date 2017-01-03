@@ -13,9 +13,13 @@
 
 ## links for similar programs
 
-    http://www.cerebralmeltdown.com
+    http://www.celnav.de/longterm.htm
+
+    http://aa.usno.navy.mil/index.php
+
+    https://github.com/DouglasAllen/gem-equationoftime
 
     https://github.com/DouglasAllen/calc_sun
 
-    https://github.com/DouglasAllen/gem-equationoftime
+    http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/
 
