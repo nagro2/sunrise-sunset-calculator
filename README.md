@@ -25,3 +25,4 @@
 
     [http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/](http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/)
 
+    [https://www.timeanddate.com/time/leap-seconds-future.html](https://www.timeanddate.com/time/leap-seconds-future.html)
