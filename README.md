@@ -13,16 +13,16 @@
 
 ## links for similar programs
 
-    [http://www.celnav.de/longterm.htm](http://www.celnav.de/longterm.htm)
+* [http://www.celnav.de/longterm.htm](http://www.celnav.de/longterm.htm)
 
-    [http://aa.usno.navy.mil/index.php](http://aa.usno.navy.mil/index.php)
+* [http://aa.usno.navy.mil/index.php](http://aa.usno.navy.mil/index.php)
 
-    [https://github.com/DouglasAllen/gem-equationoftime](https://github.com/DouglasAllen/gem-equationoftime)
+* [https://github.com/DouglasAllen/gem-equationoftime](https://github.com/DouglasAllen/gem-equationoftime)
 
-    [https://github.com/DouglasAllen/calc_sun](https://github.com/DouglasAllen/calc_sun)
+* [https://github.com/DouglasAllen/calc_sun](https://github.com/DouglasAllen/calc_sun)
 
-    [http://rbur004.github.io/sunriseset/](http://rbur004.github.io/sunriseset/)
+* [http://rbur004.github.io/sunriseset/](http://rbur004.github.io/sunriseset/)
 
-    [http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/](http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/)
+* [http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/](http://www.cerebralmeltdown.com/programming_projects/ruby-code-for-calculating-the-suns-position/)
 
-    [https://www.timeanddate.com/time/leap-seconds-future.html](https://www.timeanddate.com/time/leap-seconds-future.html)
+* [https://www.timeanddate.com/time/leap-seconds-future.html](https://www.timeanddate.com/time/leap-seconds-future.html)
