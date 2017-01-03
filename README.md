@@ -17,7 +17,7 @@
 
 * [http://aa.usno.navy.mil/index.php](http://aa.usno.navy.mil/index.php)
 
-* [https://github.com/DouglasAllen/gem-equationoftime](https://github.com/DouglasAllen/gem-equationoftime)
+* [https://github.com/DouglasAllen/gem-equationoftime/tree/dev](https://github.com/DouglasAllen/gem-equationoftime/tree/dev)
 
 * [https://github.com/DouglasAllen/calc_sun](https://github.com/DouglasAllen/calc_sun)
 
