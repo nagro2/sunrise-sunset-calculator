@@ -10,3 +10,12 @@
     For 1/2/2017 nautical sunset 17:28
     For 1/2/2017 astronomical sunrise  6:04
     For 1/2/2017 astronomical sunset 18:08
+
+## links for similar programs
+
+    http://www.cerebralmeltdown.com
+
+    https://github.com/DouglasAllen/calc_sun
+
+    https://github.com/DouglasAllen/gem-equationoftime
+
