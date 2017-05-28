@@ -57,8 +57,6 @@ class SunRiseSunSet
       cos(102 * PI / 180)
     when 'astronomical'
       cos(108 * PI / 180)
-    else
-      exit
     end
   end
 
@@ -252,9 +250,9 @@ end
 
 @time = Time.now
 
-lat = 51.4770228
-lon = -0.0001147
-zone = 0
+lat = 41.94
+lon = -88.75
+zone = -5
 
 SunRiseSunSet.new(@time, lat, lon, 'official', 'rise', zone).output
 SunRiseSunSet.new(@time, lat, lon, 'official', 'set', zone).output
